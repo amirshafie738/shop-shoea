@@ -1,0 +1,25 @@
+/* کانتینر اصلی نقاط */
+.swiper-pagination {
+    position: relative !important; /* از حالت روی هوا بودن در میاد */
+    bottom: 0 !important;         /* جاش رو فیکس می‌کنه */
+    margin-top: 30px !important;  /* این دقیقاً همون فاصله‌ای هست که از متن بالا می‌خوای */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* استایل عمومی برای همه خطوط (غیرفعال) */
+.swiper-pagination-bullet {
+    width: 32px !important;      /* طول خط */
+    height: 4px !important;      /* ضخامت خط */
+    border-radius: 0px !important; /* حذف گردی لبه‌ها */
+    background-color: #9CA3AF !important; /* رنگ خاکستری (مشابه تصویر) */
+    opacity: 1 !important;        /* لغو شفافیت پیش‌فرض */
+    transition: all 0.3s ease;
+}
+
+/* استایل مخصوص خط فعال */
+.swiper-pagination-bullet-active {
+    background-color: #000000 !important; /* رنگ مشکی خالص */
+    width: 32px !important;         
+}
