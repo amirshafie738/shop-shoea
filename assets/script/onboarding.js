@@ -1,14 +1,8 @@
+// /////////////////////////جلوگیری از ورود تکراری //////////////////////////
 
-/////////////////////////جلوگیری از ورود تکراری //////////////////////////
-(function() {
-    const hasSeenOnboarding = localStorage.getItem('onboarding_complete');
-
-    if (hasSeenOnboarding === 'true') {
-        // اگر قبلاً دیده، بفرستش صفحه بعد
-        window.location.href = './assets/page/login.html';
-    }
-})();
-
+if (localStorage.getItem("rememberMe") === "true") {
+    window.location.href = './assets/page/Home.html';
+}
 /// take elment loading 
 const splashScreenOnboarding = document.getElementById('splash-screen')
 //emlmet onboarding page2 
@@ -65,10 +59,7 @@ nextButtons.forEach(btn => {
 const getStartedBtn = document.getElementById('get-started');
 
 if (getStartedBtn) {
-    getStartedBtn.addEventListener('click', () => {
-        // ۱. ذخیره کردن اینکه کاربر Onboarding را دیده است
-        localStorage.setItem('onboarding_complete', 'true');
-        
+    getStartedBtn.addEventListener('click', () => {     
         // ۲. انتقال به صفحه بعدی (مثلاً لاگین یا صفحه اصلی)
         window.location.href = './assets/page/login.html'; 
     });
