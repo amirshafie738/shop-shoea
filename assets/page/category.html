@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="w-full h-full">
+    <div id="header"></div>
+    <!-- هدر: دکمه برگشت + اسم برند -->
+    <header class="flex items-center gap-3 px-8 h-14 mb-4">
+        <button onclick="history.back()" class="text-gray-900" aria-label="Back">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M16.0018 7.00126C16.0018 7.26648 15.8964 7.52083 15.7089 7.70837C15.5214 7.89591 15.267 8.00126 15.0018 8.00126H3.41579L7.70979 12.2933C7.80276 12.3862 7.87652 12.4966 7.92683 12.6181C7.97715 12.7396 8.00305 12.8698 8.00305 13.0013C8.00305 13.1328 7.97715 13.263 7.92683 13.3844C7.87652 13.5059 7.80276 13.6163 7.70979 13.7093C7.61681 13.8022 7.50643 13.876 7.38495 13.9263C7.26348 13.9766 7.13328 14.0025 7.00179 14.0025C6.8703 14.0025 6.7401 13.9766 6.61862 13.9263C6.49714 13.876 6.38676 13.8022 6.29379 13.7093L0.293787 7.70926C0.200661 7.61637 0.126775 7.50602 0.0763621 7.38453C0.0259492 7.26304 0 7.1328 0 7.00126C0 6.86973 0.0259492 6.73949 0.0763621 6.618C0.126775 6.49651 0.200661 6.38615 0.293787 6.29326L6.29379 0.293263C6.48156 0.10549 6.73624 0 7.00179 0C7.26734 0 7.52201 0.10549 7.70979 0.293263C7.89756 0.481037 8.00305 0.735712 8.00305 1.00126C8.00305 1.26682 7.89756 1.52149 7.70979 1.70926L3.41579 6.00126H15.0018C15.267 6.00126 15.5214 6.10662 15.7089 6.29416C15.8964 6.48169 16.0018 6.73605 16.0018 7.00126Z"
+                    fill="black" />
+            </svg>
+        </button>
+        <h1 id="category-title" class="text-gray-900 font-semibold text-xl"></h1>
+    </header>
+
+    <main>
+        <div class="px-6 mt-2 mb-10">
+            <div id="category-list" class="grid grid-cols-2 gap-x-4 gap-y-6">
+                <!-- محصولات اینجا با جاوااسکریپت رندر می‌شن -->
+            </div>
+        </div>
+    </main>
+    <div id="navbar"></div>
+    <script type="module" src="../script/category.js"></script>
+</body>
+
+</html>
