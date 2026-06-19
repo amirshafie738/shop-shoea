@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* برای مخفی کردن نوار اسکرول در مرورگرهای مختلف */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="w-full h-full">
+    <div id="header"></div>
+    <main>
+        <!-- Search Bar Section -->
+        <div class="px-6 ">
+            <div class="relative flex items-center mt-2">
+                <!-- Search Icon -->
+                <span class="absolute left-4 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-search">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                </span>
+                <!-- Input Field -->
+                <input type="text" placeholder="Search"
+                    class="w-full bg-gray-50 border-none rounded-sm py-1.5 pl-12 pr-4 focus:ring-2 focus:ring-black outline-none text-gray-700 placeholder-gray-400 transition-all">
+            </div>
+        </div>
+
+        <!-- Brands Grid Section -->
+        <div class="px-6 mt-2.5">
+            <div class="grid px-2 py-3 grid-cols-4 gap-y-7 gap-x-11">
+
+                <!-- Nike -->
+                <div id="nike-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Nike"><img src="../images/image 1.png" alt="Nike"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Nike</span>
+                </div>
+
+                <!-- Adidas -->
+                <div id="Adidas-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Adidas"><img src="../images/image 1 (1).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Adidas</span>
+                </div>
+
+                <!-- Puma -->
+                <div id="Puma-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Puma"><img src="../images/image 1 (2).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Puma</span>
+                </div>
+
+                <!-- Asics -->
+                <div id="Asics-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Asics"><img src="../images/image 1 (3).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Asics</span>
+                </div>
+
+                <!-- Reebok -->
+                <div id="Reebok-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Reebok"><img src="../images/image 1 (4).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Reebok</span>
+                </div>
+
+                <!-- New Balance -->
+                <div id="New-Balance-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=New Balance"><img src="../images/image 1 (5).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm truncate w-full text-center">New Ba..</span>
+                </div>
+
+                <!-- Converse -->
+                <div id="Converse-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <a href="category.html?brand=Converse"><img src="../images/image 1 (6).png" alt="Adidas"
+                                class="w-8 h-8 object-contain"></a>
+                    </div>
+                    <span class=" text-gray-900 text-sm">Converse</span>
+                </div>
+
+                <!-- More -->
+                <div id="More-filter" class="flex flex-col items-center gap-2 cursor-pointer group">
+                    <div
+                        class="w-[60px] h-[60px] bg-[#ECECEC] rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-circle-ellipsis-icon lucide-circle-ellipsis">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M17 12h.01" />
+                            <path d="M12 12h.01" />
+                            <path d="M7 12h.01" />
+                        </svg>
+                    </div>
+                    <span class=" text-gray-900 text-sm">More ..</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Most Popular Section -->
+        <div class="mt-4">
+            <!-- Title & See All -->
+            <div class="flex items-center justify-between px-6 mb-5">
+                <h3 class="text-gray-900 font-bold text-xl">Most Popular</h3>
+                <a href="./mostPopular">
+                    <button class="text-gray-900 font-bold text-base hover:underline">See All</button>
+                </a>
+            </div>
+
+            <!-- Horizontal Categories (Scrollable) -->
+            <div class="flex items-center gap-3 overflow-x-auto px-6 no-scrollbar">
+                <!-- Active Category -->
+                <button id="btn-all" onclick="changeFilter('all')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap transition-all">
+                    All
+                </button>
+
+                <button id="btn-nike" onclick="changeFilter('Nike')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Nike
+                </button>
+
+                <button id="btn-adidas" onclick="changeFilter('Adidas')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Adidas
+                </button>
+
+                <button id="btn-puma" onclick="changeFilter('Puma')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Puma
+                </button>
+
+                <button id="btn-asics" onclick="changeFilter('Asics')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Asics
+                </button>
+
+                <button id="btn-reebok" onclick="changeFilter('Reebok')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Reebok
+                </button>
+                <button id="btn-new-balance" onclick="changeFilter('new balance')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    new balance
+                </button>
+                <button id="btn-converse" onclick="changeFilter('converse')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    converse
+                </button>
+                <button id="btn-vans" onclick="changeFilter('Vans')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Vans
+                </button>
+                <button id="btn-jordan" onclick="changeFilter('Jordan')"
+                    class="bg-white text-gray-800 px-6 py-2 rounded-full border-2 border-gray-800 text-base font-semibold whitespace-nowrap hover:bg-gray-50 transition-all">
+                    Jordan
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Grid Section -->
+        <div class="px-6 mt-6 mb-24">
+            <!-- Grid Container -->
+            <div id="cart-list" class="grid grid-cols-2  gap-x-4 gap-y-6">
+
+                <!-- Product Card 1 -->
+                <div class="flex flex-col">
+                    <!-- Image Container -->
+                    <div class="bg-gray-100 rounded-3xl  flex items-center justify-center p-5 overflow-hidden mb-3">
+                        <img src="../images/Rectangle 6.png" alt="Product" class="w-36 h-36 ">
+                    </div>
+                    <!-- Product Info -->
+                    <h3 class="text-gray-900 font-bold text-xl truncate px-1">K-Swiss ista Train..</h3>
+                    <p class="text-gray-800 font-semibold text-base px-1 mt-2">$ <span> 85.00</span></p>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="flex flex-col">
+                    <div class="bg-gray-100 rounded-3xl  flex items-center justify-center p-5 overflow-hidden mb-3">
+                        <img src="../images/Rectangle 6.png" alt="Product" class="w-36 h-36 ">
+                    </div>
+                    <h3 class="text-gray-900 font-bold text-xl truncate px-1">K-Swiss ista Train..</h3>
+                    <p class="text-gray-800 font-semibold text-base px-1 mt-2">$ 85.00</p>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="flex flex-col">
+                    <div class="bg-gray-100 rounded-3xl  flex items-center justify-center p-5 overflow-hidden mb-3">
+                        <img src="../images/Rectangle 6.png" alt="Product" class="w-36 h-36 ">
+                    </div>
+                    <h3 class="text-gray-900 font-bold text-xl truncate px-1">K-Swiss ista Train..</h3>
+                    <p class="text-gray-800 font-semibold text-base px-1 mt-2">$ 85.00</p>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="flex flex-col">
+                    <div class="bg-gray-100 rounded-3xl  flex items-center justify-center p-5 overflow-hidden mb-3">
+                        <img src="../images/Rectangle 6.png" alt="Product" class="w-36 h-36 ">
+                    </div>
+                    <h3 class="text-gray-900 font-bold text-xl truncate px-1">K-Swiss ista Train..</h3>
+                    <p class="text-gray-800 font-semibold text-base px-1 mt-2">$ 85.00</p>
+                </div>
+
+            </div>
+        </div>
+        <!-- Bottom Navigation -->
+        <div id="navbar"></div>
+
+    </main>
+    <script type="module" src="../script/home.js"></script>
+</body>
+
+</html>
