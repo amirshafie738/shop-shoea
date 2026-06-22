@@ -1,0 +1,330 @@
+import { get } from "../servise/service.js";
+
+// --- URL params ---
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
+// --- state ---
+let product = null;
+let quantity = 1;
+let selectedSize = null;
+let selectedColor = null;
+
+// --- localStorage keys ---
+const FAVORITES_KEY = "favorites";
+const CART_KEY = "cart";
+
+// ============================================================
+// ستاره‌ها با SVG gradient
+// هر چقدر rating بیشتر، بیشتر از چپ به راست پر می‌شن
+// ============================================================
+function starPoints(cx, cy, outerR, innerR) {
+    const points = [];
+    for (let i = 0; i < 10; i++) {
+        const angle = (Math.PI / 5) * i - Math.PI / 2;
+        const r = i % 2 === 0 ? outerR : innerR;
+        points.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
+    }
+    return points.join(" ");
+}
+
+function renderStars(rating) {
+    const percent = (rating / 5) * 100; // مثلاً 4.3/5 = 86%
+    const id = `star-${Date.now()}`;
+
+    return `
+        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="${id}" x1="0" x2="100%" y1="0" y2="0">
+                    <stop offset="${percent}%" stop-color="#111827"/>
+                    <stop offset="${percent}%" stop-color="#D1D5DB"/>
+                </linearGradient>
+            </defs>
+            <polygon
+                points="10,2 12.9,7.5 19,8.3 14.5,12.6 15.8,18.8 10,15.7 4.2,18.8 5.5,12.6 1,8.3 7.1,7.5"
+                fill="url(#${id})"
+            />
+        </svg>
+    `;
+}
+
+// ============================================================
+// Favorites (localStorage)
+// ============================================================
+function getFavorites() {
+    const stored = localStorage.getItem(FAVORITES_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+}
+
+function isFavorite(id) {
+    return getFavorites().includes(Number(id));
+}
+
+function toggleFavorite(id) {
+    let favorites = getFavorites();
+    const numId = Number(id);
+    if (favorites.includes(numId)) {
+        favorites = favorites.filter((favId) => favId !== numId);
+    } else {
+        favorites.push(numId);
+    }
+    saveFavorites(favorites);
+    return favorites.includes(numId);
+}
+
+function updateWishlistIcon(active) {
+    const svg = document.querySelector("#wishlist-btn svg");
+    svg.setAttribute("fill", active ? "currentColor" : "none");
+}
+
+// ============================================================
+// Cart (localStorage)
+// ============================================================
+function getCart() {
+    const stored = localStorage.getItem(CART_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function addToCart() {
+    const cart = getCart();
+
+    const newItem = {
+        productId: Number(productId),
+        title: product.title,
+        image: product.image,       // اولین عکس محصول
+        price: product.price,
+        quantity: quantity,
+        size: selectedSize,
+        color: selectedColor,       // مقدار hex رنگ
+    };
+
+    // اگه همین محصول با همین سایز و رنگ قبلاً بود، فقط تعدادش زیاد می‌شه
+    const existingIndex = cart.findIndex(
+        (c) =>
+            c.productId === newItem.productId &&
+            c.size === newItem.size &&
+            c.color === newItem.color
+    );
+
+    if (existingIndex !== -1) {
+        cart[existingIndex].quantity += newItem.quantity;
+    } else {
+        cart.push(newItem);
+    }
+
+    saveCart(cart);
+}
+
+// ============================================================
+// دریافت محصول از API
+// ============================================================
+async function loadProduct() {
+    try {
+        if (!productId) throw new Error("id در URL نیست");
+        product = await get(`/products/${productId}`);
+        initSwiper(product);
+        renderProduct(product);
+    } catch (error) {
+        console.error("خطا در دریافت محصول:", error.message);
+        document.body.innerHTML = `
+            <p class="text-center text-gray-500 mt-20">محصول پیدا نشد</p>
+        `;
+    }
+}
+
+// ============================================================
+// Swiper
+// ============================================================
+function initSwiper(p) {
+    const wrapper = document.getElementById("swiper-wrapper");
+    wrapper.innerHTML = "";
+
+    // اگر تصاویر (images) آرایه هستند، همه را اسلاید کن؛ در غیر این صورت، همان تک‌تصویر را نمایش بده
+    const images = Array.isArray(p.images) && p.images.length > 0
+        ? p.images
+        : [p.image];
+
+    images.forEach((src) => {
+        wrapper.innerHTML += `
+            <div class="swiper-slide">
+                <img src="${src}" alt="${p.title}">
+            </div>
+        `;
+    });
+
+    new Swiper("#product-swiper", {
+        loop: images.length > 1,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+}
+
+// ============================================================
+// رندر اطلاعات محصول
+// ============================================================
+function renderProduct(p) {
+    document.getElementById("product-title").textContent = p.title;
+
+    // Sold badge
+    const soldBadge = document.getElementById("sold-badge");
+    if (p.sold) {
+        soldBadge.textContent = `${formatNumber(p.sold)} sold`;
+    } else {
+        soldBadge.style.display = "none";
+    }
+
+    // Rating با ستاره‌های SVG
+    const ratingContainer = document.getElementById("rating-value");
+    ratingContainer.innerHTML = `
+        <div class="flex items-center gap-1">
+            ${p.rating ? renderStars(p.rating) : ""}
+            <span class="text-gray-700 text-sm font-medium">${p.rating ?? "—"}</span>
+            <span class="text-gray-400 text-sm">
+                ${p.reviewsCount ? `(${formatNumber(p.reviewsCount)} reviews)` : ""}
+            </span>
+        </div>
+    `;
+
+    // Description با view more/less
+    const fullDesc = p.description || "توضیحاتی ثبت نشده.";
+    const shortDesc = fullDesc.length > 70 ? fullDesc.slice(0, 70) + "... " : fullDesc;
+    const descEl = document.getElementById("description-text");
+    descEl.textContent = shortDesc;
+
+    const viewMoreBtn = document.getElementById("view-more-btn");
+    if (fullDesc.length <= 70) {
+        viewMoreBtn.style.display = "none";
+    } else {
+        let expanded = false;
+        viewMoreBtn.addEventListener("click", () => {
+            expanded = !expanded;
+            descEl.textContent = expanded ? fullDesc + " " : shortDesc;
+            viewMoreBtn.textContent = expanded ? "view less.." : "view more..";
+        });
+    }
+
+    // سایزها
+    const sizeContainer = document.getElementById("size-options");
+    sizeContainer.innerHTML = "";
+    if (p.sizes && p.sizes.length > 0) {
+        selectedSize = p.sizes[p.sizes.length - 1]; // آخرین سایز پیش‌فرض
+        p.sizes.forEach((size) => {
+            const isActive = size === selectedSize;
+            const btn = document.createElement("button");
+            btn.textContent = size;
+            btn.className = sizeClass(isActive);
+            btn.addEventListener("click", () => {
+                selectedSize = size;
+                document.querySelectorAll("#size-options button").forEach((b) =>
+                    b.className = sizeClass(false)
+                );
+                btn.className = sizeClass(true);
+            });
+            sizeContainer.appendChild(btn);
+        });
+    }
+
+    // رنگ‌ها
+    const colorContainer = document.getElementById("color-options");
+    colorContainer.innerHTML = "";
+    if (p.colors && p.colors.length > 0) {
+        selectedColor = p.colors[0]; // اولین رنگ پیش‌فرض
+        p.colors.forEach((color, index) => {
+            const isActive = index === 0;
+            const btn = document.createElement("button");
+            btn.style.backgroundColor = color;
+            btn.className = colorClass(isActive);
+            btn.innerHTML = isActive ? "✓" : "";
+            btn.addEventListener("click", () => {
+                selectedColor = color;
+                document.querySelectorAll("#color-options button").forEach((b, i) => {
+                    b.className = colorClass(i === index);
+                    b.innerHTML = i === index ? "✓" : "";
+                });
+            });
+            colorContainer.appendChild(btn);
+        });
+    }
+
+    // وضعیت اولیه‌ی قلب
+    updateWishlistIcon(isFavorite(p.id));
+
+    updateTotalPrice();
+}
+
+// ============================================================
+// کلاس‌ها
+// ============================================================
+function sizeClass(active) {
+    return active
+        ? "w-11 h-11 flex items-center justify-center rounded-full bg-gray-900 text-white font-semibold"
+        : "w-12 h-12 flex items-center justify-center rounded-full border border-gray-300 text-gray-700 font-semibold";
+}
+
+function colorClass(active) {
+    return "w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold " +
+        (active ? "ring-2 ring-offset-2 ring-gray-900" : "");
+}
+
+function formatNumber(num) {
+    return num.toLocaleString();
+}
+
+function updateTotalPrice() {
+    const total = (product.price * quantity).toFixed(2);
+    document.getElementById("total-price").textContent = `$${total}`;
+}
+
+// ============================================================
+// Event Listeners
+// ============================================================
+document.getElementById("qty-increase").addEventListener("click", () => {
+    quantity++;
+    document.getElementById("qty-value").textContent = quantity;
+    updateTotalPrice();
+});
+
+document.getElementById("qty-decrease").addEventListener("click", () => {
+    if (quantity > 1) {
+        quantity--;
+        document.getElementById("qty-value").textContent = quantity;
+        updateTotalPrice();
+    }
+});
+
+document.getElementById("wishlist-btn").addEventListener("click", () => {
+    const nowActive = toggleFavorite(productId);
+    updateWishlistIcon(nowActive);
+});
+
+document.getElementById("add-to-cart-btn").addEventListener("click", () => {
+    addToCart();
+
+    // فیدبک بصری
+    const btn = document.getElementById("add-to-cart-btn");
+    btn.textContent = "✓ Added!";
+    btn.classList.replace("bg-gray-900", "bg-green-600");
+    setTimeout(() => {
+        btn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                <path d="M3 6h18"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Add to Cart
+        `;
+        btn.classList.replace("bg-green-600", "bg-gray-900");
+    }, 1500);
+});
+
+document.addEventListener("DOMContentLoaded", loadProduct);
