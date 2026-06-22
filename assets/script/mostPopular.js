@@ -70,7 +70,7 @@ function displayProducts() {
   pageProducts.forEach((p) => {
     cartList.innerHTML += `
       <!-- Product Card -->
-      <a href="cart.html?id=${p.id}">   
+      <a href="detail.html?id=${p.id}">   
         <div class="flex flex-col">
 
           <!-- Image Container -->

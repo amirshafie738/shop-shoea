@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        .swiper {
+            width: 100%;
+            height: 392px;
+        }
+
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f2f2f2;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* دایره‌های غیرفعال */
+        .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: #D1D5DB !important;
+            opacity: 1;
+            border-radius: 999px;
+            transition: all 0.3s ease;
+        }
+
+        /* bullet فعال: کشیده و تیره */
+        .swiper-pagination-bullet-active {
+            width: 32px !important;
+            height: 8px !important;
+            background: #111827 !important;
+            border-radius: 999px !important;
+        }
+    </style>
+</head>
+
+<body class="bg-white pb-10">
+
+    <div class="relative">
+        <button onclick="history.back()" class="absolute top-5 left-5 z-10 text-gray-900" aria-label="Back">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M16.0018 7.00126C16.0018 7.26648 15.8964 7.52083 15.7089 7.70837C15.5214 7.89591 15.267 8.00126 15.0018 8.00126H3.41579L7.70979 12.2933C7.80276 12.3862 7.87652 12.4966 7.92683 12.6181C7.97715 12.7396 8.00305 12.8698 8.00305 13.0013C8.00305 13.1328 7.97715 13.263 7.92683 13.3844C7.87652 13.5059 7.80276 13.6163 7.70979 13.7093C7.61681 13.8022 7.50643 13.876 7.38495 13.9263C7.26348 13.9766 7.13328 14.0025 7.00179 14.0025C6.8703 14.0025 6.7401 13.9766 6.61862 13.9263C6.49714 13.876 6.38676 13.8022 6.29379 13.7093L0.293787 7.70926C0.200661 7.61637 0.126775 7.50602 0.0763621 7.38453C0.0259492 7.26304 0 7.1328 0 7.00126C0 6.86973 0.0259492 6.73949 0.0763621 6.618C0.126775 6.49651 0.200661 6.38615 0.293787 6.29326L6.29379 0.293263C6.48156 0.10549 6.73624 0 7.00179 0C7.26734 0 7.52201 0.10549 7.70979 0.293263C7.89756 0.481037 8.00305 0.735712 8.00305 1.00126C8.00305 1.26682 7.89756 1.52149 7.70979 1.70926L3.41579 6.00126H15.0018C15.267 6.00126 15.5214 6.10662 15.7089 6.29416C15.8964 6.48169 16.0018 6.73605 16.0018 7.00126Z"
+                    fill="black" />
+            </svg>
+        </button>
+
+        <!-- Swiper -->
+        <div class="swiper" id="product-swiper">
+            <div class="swiper-wrapper" id="swiper-wrapper"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="px-6 py-5">
+
+        <div class="flex items-start justify-between">
+            <h1 id="product-title" class="text-gray-900 font-bold text-2xl flex-1 mr-3"></h1>
+            <button id="wishlist-btn" aria-label="Wishlist" class="text-gray-900 mt-1 flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Rating & Sold -->
+        <div class="flex items-center gap-3 mt-2">
+            <span id="sold-badge" class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-md"></span>
+            <div id="rating-value"></div>
+        </div>
+
+        <hr class="my-4 border-gray-200">
+
+        <!-- Description -->
+        <h2 class="text-gray-900 font-bold text-lg mb-1">Description</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">
+            <span id="description-text"></span>
+            <button id="view-more-btn" class="text-gray-900 font-semibold ml-1">view more..</button>
+        </p>
+        <!-- size & color -->
+        <section class="flex gap-7">
+            <!-- Size -->
+            <div class="flex flex-col">
+                <h2 class="text-gray-900 font-bold text-lg mt-5 mb-2">Size</h2>
+                <div id="size-options" class="flex items-center gap-3 "></div>
+            </div>
+            <!-- Color -->
+            <div class="flex flex-col">
+                <h2 class="text-gray-900 font-bold text-lg mt-5 mb-2">Color</h2>
+                <div id="color-options" class="flex items-center gap-3"></div>
+            </div>
+        </section>
+        <!-- Quantity -->
+        <section class="flex gap-6 mt-6">
+            <h2 class="text-gray-900 font-bold text-lg mt-5 mb-2">Quantity</h2>
+            <div class="flex items-center gap-4 bg-gray-100 rounded-full w-fit px-2 py-1">
+                <button id="qty-decrease"
+                    class="w-10 h-6 flex items-center justify-center text-gray-900 text-xl font-bold">−</button>
+                <span id="qty-value" class="text-gray-900 font-semibold w-4 text-center">1</span>
+                <button id="qty-increase"
+                    class="w-10 h-6 flex items-center justify-center text-gray-900 text-xl font-bold">+</button>
+            </div>
+        </section>
+        <hr class="my-5 border-gray-200">
+
+        <!-- Total + Add to Cart -->
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-400 text-sm">Total price</p>
+                <p id="total-price" class="text-gray-900 font-bold text-2xl"></p>
+            </div>
+            <button id="add-to-cart-btn"
+                class="bg-gray-900 text-white px-16 py-4 rounded-full font-semibold flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                Add to Cart
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module" src="../script/detail.js"></script>
+</body>
+
+</html>

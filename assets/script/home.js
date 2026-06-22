@@ -30,7 +30,7 @@ function renderHomeCart(data) {
     data.forEach((p) => {
         finalHtml += `
         <!-- Product Card 1 -->
-              <a href="cart.html?id=${p.id}">   
+              <a href="detail.html?id=${p.id}">   
                 <div class="flex flex-col">
                     <!-- Image Container -->
                     <div class="bg-gray-100 rounded-3xl  flex items-center justify-center p-5 overflow-hidden mb-3">
