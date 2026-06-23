@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white max-w-md mx-auto min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between px-6 py-5">
+        <div class="flex items-center gap-3">
+            <img src="../images/logo.png" alt="Logo" class="w-7 h-7 object-contain">
+            <h1 class="text-2xl font-bold text-gray-900">My Cart</h1>
+        </div>
+        <button class="text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+            </svg>
+        </button>
+    </header>
+
+    <!-- Cart List -->
+    <div id="cart-list" class="flex-1 flex flex-col gap-5 px-6 pb-40 overflow-y-auto">
+        <!-- آیتم‌ها اینجا رندر میشن -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden flex-1  flex-col items-center justify-center gap-3 pb-40">
+        <span class="text-6xl">🛒</span>
+        <p class="text-gray-500 text-base">سبد خریدت خالیه</p>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div id="bottom-bar" class="fixed flex gap-8 bottom-[73px] left-0 right-0 max-w-md mx-auto bg-[#fdfdfd] border-t border-gray-100 rounded-t-3xl px-6 py-4">
+        <div class="flex flex-col mb-4">
+            <span class="text-gray-500 text-sm">Total price</span>
+            <span id="total-price" class="text-gray-900 font-bold text-2xl">$0.00</span>
+        </div>
+        <button id="checkout-btn" onclick="handleCheckout()"
+            class="w-full bg-gray-900 text-white font-semibold py-4 rounded-full flex items-center justify-center gap-2 hover:bg-black transition-colors active:scale-[0.98]">
+            Checkout
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+
+    <!-- Overlay -->
+    <div id="remove-overlay" onclick="cancelRemove()" class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity">
+    </div>
+
+    <!-- Remove Bottom Sheet -->
+    <div id="remove-sheet"
+        class="translate-y-full fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white  rounded-t-3xl z-50 px-6 pt-5 pb-10 transition-transform duration-300">
+        <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+        <h2 class="text-xl font-bold text-gray-900 text-center mb-6">Remove From Cart?</h2>
+        <div class="flex items-center gap-4 bg-gray-50 rounded-2xl p-4 mb-8">
+            <div
+                class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden p-2">
+                <img id="sheet-img" src="" alt="" class="w-full h-full object-contain">
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 id="sheet-title" class="text-gray-900 font-bold text-base truncate"></h3>
+                <div class="flex items-center gap-2 mt-1">
+                    <span id="sheet-color-dot" class="w-4 h-4 rounded-full border border-gray-300 shrink-0"></span>
+                    <span id="sheet-color-text" class="text-gray-500 text-sm capitalize"></span>
+                    <span class="text-gray-300">|</span>
+                    <span id="sheet-size" class="text-gray-500 text-sm"></span>
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                    <span id="sheet-price" class="text-gray-900 font-bold text-base"></span>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 font-bold">-</span>
+                        <span id="sheet-quantity" class="text-gray-900 font-semibold w-4 text-center"></span>
+                        <span
+                            class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 font-bold">+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="cancelRemove()"
+                class="flex-1 py-4 rounded-full border-2 border-gray-200 text-gray-700 font-semibold">Cancel</button>
+            <button onclick="confirmRemove()" class="flex-1 py-4 rounded-full bg-gray-900 text-white font-semibold">Yes,
+                Remove</button>
+        </div>
+    </div>
+
+    <script type="module" src="../script/cart.js"></script>
+</body>
+
+</html>
