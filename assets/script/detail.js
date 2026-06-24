@@ -1,4 +1,4 @@
-import { get } from "../servise/service.js";
+import { get, post, remove } from "../servise/service.js";
 
 // --- URL params ---
 const params = new URLSearchParams(window.location.search);
@@ -10,13 +10,11 @@ let quantity = 1;
 let selectedSize = null;
 let selectedColor = null;
 
-// --- localStorage keys ---
-const FAVORITES_KEY = "favorites";
+// --- localStorage key (فقط برای cart نگه می‌داریم) ---
 const CART_KEY = "cart";
 
 // ============================================================
 // ستاره‌ها با SVG gradient
-// هر چقدر rating بیشتر، بیشتر از چپ به راست پر می‌شن
 // ============================================================
 function starPoints(cx, cy, outerR, innerR) {
     const points = [];
@@ -29,7 +27,7 @@ function starPoints(cx, cy, outerR, innerR) {
 }
 
 function renderStars(rating) {
-    const percent = (rating / 5) * 100; // مثلاً 4.3/5 = 86%
+    const percent = (rating / 5) * 100;
     const id = `star-${Date.now()}`;
 
     return `
@@ -49,31 +47,24 @@ function renderStars(rating) {
 }
 
 // ============================================================
-// Favorites (localStorage)
+// Favorites (API)
 // ============================================================
-function getFavorites() {
-    const stored = localStorage.getItem(FAVORITES_KEY);
-    return stored ? JSON.parse(stored) : [];
+async function isFavorite(id) {
+    const favorites = await get("/favorites");
+    return favorites.some(f => f.productId === Number(id));
 }
 
-function saveFavorites(favorites) {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-}
+async function toggleFavorite(id) {
+    const favorites = await get("/favorites");
+    const existing = favorites.find(f => f.productId === Number(id));
 
-function isFavorite(id) {
-    return getFavorites().includes(Number(id));
-}
-
-function toggleFavorite(id) {
-    let favorites = getFavorites();
-    const numId = Number(id);
-    if (favorites.includes(numId)) {
-        favorites = favorites.filter((favId) => favId !== numId);
+    if (existing) {
+        await remove(`/favorites/${existing.id}`);
+        return false;
     } else {
-        favorites.push(numId);
+        await post("/favorites", { productId: Number(id) });
+        return true;
     }
-    saveFavorites(favorites);
-    return favorites.includes(numId);
 }
 
 function updateWishlistIcon(active) {
@@ -82,7 +73,7 @@ function updateWishlistIcon(active) {
 }
 
 // ============================================================
-// Cart (localStorage)
+// Cart (localStorage - همینطور می‌مونه)
 // ============================================================
 function getCart() {
     const stored = localStorage.getItem(CART_KEY);
@@ -99,14 +90,13 @@ function addToCart() {
     const newItem = {
         productId: Number(productId),
         title: product.title,
-        image: product.image,       // اولین عکس محصول
+        image: product.image,
         price: product.price,
         quantity: quantity,
         size: selectedSize,
-        color: selectedColor,       // مقدار hex رنگ
+        color: selectedColor,
     };
 
-    // اگه همین محصول با همین سایز و رنگ قبلاً بود، فقط تعدادش زیاد می‌شه
     const existingIndex = cart.findIndex(
         (c) =>
             c.productId === newItem.productId &&
@@ -147,7 +137,6 @@ function initSwiper(p) {
     const wrapper = document.getElementById("swiper-wrapper");
     wrapper.innerHTML = "";
 
-    // اگر تصاویر (images) آرایه هستند، همه را اسلاید کن؛ در غیر این صورت، همان تک‌تصویر را نمایش بده
     const images = Array.isArray(p.images) && p.images.length > 0
         ? p.images
         : [p.image];
@@ -172,10 +161,9 @@ function initSwiper(p) {
 // ============================================================
 // رندر اطلاعات محصول
 // ============================================================
-function renderProduct(p) {
+async function renderProduct(p) {
     document.getElementById("product-title").textContent = p.title;
 
-    // Sold badge
     const soldBadge = document.getElementById("sold-badge");
     if (p.sold) {
         soldBadge.textContent = `${formatNumber(p.sold)} sold`;
@@ -183,7 +171,6 @@ function renderProduct(p) {
         soldBadge.style.display = "none";
     }
 
-    // Rating با ستاره‌های SVG
     const ratingContainer = document.getElementById("rating-value");
     ratingContainer.innerHTML = `
         <div class="flex items-center gap-1">
@@ -195,7 +182,6 @@ function renderProduct(p) {
         </div>
     `;
 
-    // Description با view more/less
     const fullDesc = p.description || "توضیحاتی ثبت نشده.";
     const shortDesc = fullDesc.length > 70 ? fullDesc.slice(0, 70) + "... " : fullDesc;
     const descEl = document.getElementById("description-text");
@@ -213,11 +199,10 @@ function renderProduct(p) {
         });
     }
 
-    // سایزها
     const sizeContainer = document.getElementById("size-options");
     sizeContainer.innerHTML = "";
     if (p.sizes && p.sizes.length > 0) {
-        selectedSize = p.sizes[p.sizes.length - 1]; // آخرین سایز پیش‌فرض
+        selectedSize = p.sizes[p.sizes.length - 1];
         p.sizes.forEach((size) => {
             const isActive = size === selectedSize;
             const btn = document.createElement("button");
@@ -234,11 +219,10 @@ function renderProduct(p) {
         });
     }
 
-    // رنگ‌ها
     const colorContainer = document.getElementById("color-options");
     colorContainer.innerHTML = "";
     if (p.colors && p.colors.length > 0) {
-        selectedColor = p.colors[0]; // اولین رنگ پیش‌فرض
+        selectedColor = p.colors[0];
         p.colors.forEach((color, index) => {
             const isActive = index === 0;
             const btn = document.createElement("button");
@@ -256,8 +240,9 @@ function renderProduct(p) {
         });
     }
 
-    // وضعیت اولیه‌ی قلب
-    updateWishlistIcon(isFavorite(p.id));
+    // وضعیت اولیه‌ی قلب رو از API می‌گیریم
+    const fav = await isFavorite(p.id);
+    updateWishlistIcon(fav);
 
     updateTotalPrice();
 }
@@ -302,15 +287,14 @@ document.getElementById("qty-decrease").addEventListener("click", () => {
     }
 });
 
-document.getElementById("wishlist-btn").addEventListener("click", () => {
-    const nowActive = toggleFavorite(productId);
+document.getElementById("wishlist-btn").addEventListener("click", async () => {
+    const nowActive = await toggleFavorite(productId);
     updateWishlistIcon(nowActive);
 });
 
 document.getElementById("add-to-cart-btn").addEventListener("click", () => {
     addToCart();
 
-    // فیدبک بصری
     const btn = document.getElementById("add-to-cart-btn");
     btn.textContent = "✓ Added!";
     btn.classList.replace("bg-gray-900", "bg-green-600");
