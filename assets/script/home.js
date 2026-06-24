@@ -142,45 +142,55 @@ if (headerContainer) {
 }
 
 //////////////////////////////////search////////////////////////////////////////
-// دریافت المان‌های سرچ
+// دریافت المان‌های رابط کاربری (UI) برای تعامل با کاربر
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 
-// تابع جستجو
+/**
+ * تابع اصلی برای اجرای عملیات جستجو در سمت سرور
+ * این تابع مقدار ورودی را می‌گیرد، آن را به سرور می‌فرستد و نتایج را نمایش می‌دهد.
+ */
 async function performSearch() {
-  const query = searchInput.value.trim().toLowerCase();
-// زمانی که جستجو می کنیکم بخش فیلتر رنگش بر گرده حالت عادی
+  // دریافت مقدار ورودی کاربر و حذف فضاهای خالی اضافی از ابتدا و انتهای آن
+  const query = searchInput.value.trim();
+
+  // بازنشانی وضعیت ظاهری دکمه‌های فیلتر برند (Reset Filter UI)
+  // با این کار وقتی کاربر جستجو می‌کند، فیلتر قبلی غیرفعال می‌شود تا تجربه کاربری بهتری داشته باشیم
   document.querySelectorAll(".filter-btn").forEach((btn) => {
     btn.classList.remove("bg-gray-900", "text-white", "border-gray-900");
     btn.classList.add("bg-white", "text-gray-800", "border-gray-800");
   });
 
   try {
-    // همه محصولات رو بگیر
-    const allProducts = await get(`/products`);
+    // تعیین آدرس درخواست (Endpoint):
+    // اگر عبارتی در سرچ باشد، از پارامتر ?q= استفاده می‌کنیم (جستجوی سرور-ساید)
+    // اگر عبارت خالی باشد، تمام محصولات را درخواست می‌کنیم
+    // استفاده از encodeURIComponent برای جلوگیری از خرابی آدرس در صورت وجود کاراکترهای خاص
+    const endpoint = query ? `/products?q=${encodeURIComponent(query)}` : `/products`;
     
-    // اگه query خالیه همه رو نشون بده، وگرنه فیلتر کن
-    products = query
-      ? allProducts.filter(p =>
-          p.title?.toLowerCase().includes(query) ||
-          p.brand?.toLowerCase().includes(query)
-        )
-      : allProducts;
+    // دریافت اطلاعات از سرور و ذخیره در متغیر عمومی products
+    products = await get(endpoint);
 
+    // بازنشانی به صفحه اول برای نمایش نتایج جدید از ابتدا
     currentPage = 1;
+
+    // به‌روزرسانی نمایش لیست محصولات و دکمه‌های صفحه‌بندی بر اساس نتایج جدید
     displayProducts();
     createPagination();
+    
   } catch (error) {
-    console.error("خطا در جستجو:", error);
+    // مدیریت خطا در صورت عدم برقراری ارتباط با سرور
+    console.error("خطا در عملیات جستجو:", error);
   }
 }
 
-// گوش دادن به کلیک دکمه سرچ
+// فعال‌سازی رویداد کلیک برای دکمه سرچ
 searchBtn.addEventListener("click", performSearch);
 
-// گوش دادن به دکمه Enter در کیبورد
+// فعال‌سازی رویداد فشردن دکمه Enter روی کیبورد برای سرعت بیشتر کاربر
 searchInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     performSearch();
   }
 });
+
