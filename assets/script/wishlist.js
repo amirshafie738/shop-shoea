@@ -1,5 +1,5 @@
 /* ===================== Imports ===================== */
-import { get } from "../servise/service.js";
+import { get, post, remove } from "../servise/service.js";
 
 
 /* ===================== DOM Elements ===================== */
@@ -11,38 +11,49 @@ const paginationContainer = document.getElementById('pagination');
 let currentPage = 1;
 const itemsPerPage = 6;
 let products = [];
-let filteredProducts = []; // بعد از فیلتر برند
+let filteredProducts = [];
 
 
-/* ===================== LocalStorage - Favorites ===================== */
-function getFavoriteIds() {
-    const stored = localStorage.getItem("favorites");
-    return stored ? JSON.parse(stored) : [];
+/* ===================== API - Favorites ===================== */
+async function getFavoriteIds() {
+    const favorites = await get("/favorites");
+    return favorites.map(f => f.productId);
 }
 
-function toggleFavorite(id) {
-    let favorites = getFavoriteIds();
-    const numId = Number(id);
-    if (favorites.includes(numId)) {
-        favorites = favorites.filter((f) => f !== numId);
-    } else {
-        favorites.push(numId);
+async function addFavorite(productId) {
+    await post("/favorites", { productId: Number(productId) });
+}
+
+async function removeFavorite(productId) {
+    // اول آیدی رکورد favorites رو پیدا می‌کنیم
+    const favorites = await get("/favorites");
+    const record = favorites.find(f => f.productId === Number(productId));
+    if (record) {
+        await remove(`/favorites/${record.id}`);
     }
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    return favorites.includes(numId);
 }
 
-function isFavorite(id) {
-    return getFavoriteIds().includes(Number(id));
+async function isFavorite(productId) {
+    const ids = await getFavoriteIds();
+    return ids.includes(Number(productId));
+}
+
+async function toggleFavorite(productId) {
+    const fav = await isFavorite(productId);
+    if (fav) {
+        await removeFavorite(productId);
+        return false;
+    } else {
+        await addFavorite(productId);
+        return true;
+    }
 }
 
 
 /* ===================== Fetch Wishlist Products ===================== */
-// آیدی‌های موجود توی localStorage رو می‌گیریم
-// برای هر آیدی یه درخواست جدا می‌زنیم و اطلاعات کامل محصول رو می‌گیریم
 async function loadWishlist(brand) {
     try {
-        const ids = getFavoriteIds();
+        const ids = await getFavoriteIds();
 
         if (ids.length === 0) {
             products = [];
@@ -50,7 +61,6 @@ async function loadWishlist(brand) {
             return;
         }
 
-        // برای همه‌ی آیدی‌ها به‌صورت موازی درخواست می‌زنیم
         const results = await Promise.all(
             ids.map((id) => get(`/products/${id}`))
         );
@@ -77,6 +87,7 @@ function applyFilter(brand) {
     displayProducts();
     createPagination();
 }
+
 window.changeFilter = function (brand, el) {
     document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.classList.remove("bg-gray-900", "text-white", "border-gray-900");
@@ -87,6 +98,7 @@ window.changeFilter = function (brand, el) {
     applyFilter(brand);
 };
 
+
 /* ===================== Initial Load ===================== */
 document.addEventListener("DOMContentLoaded", () => {
     loadWishlist();
@@ -94,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* ===================== Render Products ===================== */
-function displayProducts() {
+async function displayProducts() {
     cartList.innerHTML = "";
 
     if (!filteredProducts || filteredProducts.length === 0) {
@@ -111,39 +123,33 @@ function displayProducts() {
     const end = start + itemsPerPage;
     const pageProducts = filteredProducts.slice(start, end);
 
+    // وضعیت قلب همه محصولات رو یکجا چک می‌کنیم
+    const favIds = await getFavoriteIds();
+
     pageProducts.forEach((p) => {
+        const isFav = favIds.includes(Number(p.id));
         cartList.innerHTML += `
             <a href="../detail.html?id=${p.id}" class="block">
                 <div class="flex flex-col">
-
-                    <!-- Image Container -->
                     <div class="bg-gray-100 rounded-3xl flex items-center justify-center p-5 overflow-hidden mb-3 relative">
                         <img src="${p.image}" class="w-36 h-36 object-contain">
-
-                        <!-- دکمه‌ی قلب روی عکس -->
                         <button
                             class="wishlist-btn absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center"
                             data-id="${p.id}"
                             onclick="handleWishlistToggle(event, ${p.id})">
                             <svg width="14" height="14" viewBox="0 0 24 24"
-                                fill="${isFavorite(p.id) ? 'white' : 'none'}"
+                                fill="${isFav ? 'white' : 'none'}"
                                 stroke="white" stroke-width="2">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                             </svg>
                         </button>
                     </div>
-
-                    <!-- Product Info -->
                     <h3 class="text-gray-900 font-bold text-xl truncate px-1">${p.title}</h3>
-
-                    <!-- Rating + Sold -->
                     <div class="flex items-center gap-2 px-1 mt-1">
                         ${p.rating ? renderStar(p.rating) : ""}
                         <span class="text-gray-500 text-xs">${p.rating ?? ""}</span>
                         ${p.sold ? `<span class="text-gray-300">|</span><span class="text-gray-500 text-xs">${formatNumber(p.sold)} sold</span>` : ""}
                     </div>
-
-                    <!-- Price -->
                     <p class="text-gray-900 font-bold text-base px-1 mt-1">
                         $${p.price.toFixed(2)}
                     </p>
@@ -155,18 +161,14 @@ function displayProducts() {
 
 
 /* ===================== Toggle Wishlist از داخل کارت ===================== */
-// چون دکمه‌ی قلب داخل تگ <a> هست، باید از event.stopPropagation استفاده کنیم
-// تا کلیک روی قلب باعث رفتن به صفحه‌ی detail نشه
-window.handleWishlistToggle = function (event, id) {
+window.handleWishlistToggle = async function (event, id) {
     event.preventDefault();
     event.stopPropagation();
 
-    const isNowFav = toggleFavorite(id);
+    const isNowFav = await toggleFavorite(id);
 
-    // اگه از wishlist حذف شد، از لیست فعلی هم برداشته می‌شه و دوباره رندر می‌شه
     if (!isNowFav) {
-        products = products.filter((p) => p.id !== Number(id));
-        applyFilter("all");
+        await loadWishlist(); // 
     }
 };
 
