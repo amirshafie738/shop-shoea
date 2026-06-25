@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white max-w-md mx-auto min-h-screen pb-24">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between px-6 py-4 mt-2">
+    <div class="flex gap-5">
+
+      <svg width="21" height="26" viewBox="0 0 54 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.23355 17.7415C22.2531 10.4389 33.6453 3.542 39.7482 0.499261C44.834 -2.54348 47.1042 9.00132 42.7997 16.7273C38.4952 24.4532 26.5252 28.8982 26.5252 28.8982C26.5252 28.8982 52.9712 22.8128 53.9884 46.1404C54.2537 52.2259 49.9198 59.3256 46.8683 61.3541C43.8168 63.3826 17.3708 79.1034 14.3194 80.6248C10.7425 82.4081 9.23359 77.582 9.23359 71.4965C9.23359 57.2971 25.5081 52.2259 25.5081 52.2259C11.2679 54.2544 2.1135 49.1832 0.0791923 33.9695C-0.598903 28.8982 3.13068 21.1646 9.23355 17.7415Z" fill="black"/>
+        </svg>        
+
+      <h1 class="text-xl font-bold">My Orders</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <button>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      </button>
+      <button>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="8" y1="12" x2="8.01" y2="12"></line>
+        <line x1="12" y1="12" x2="12.01" y2="12"></line>
+        <line x1="16" y1="12" x2="16.01" y2="12"></line>
+      </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex px-6 border-b border-gray-200 mt-2">
+    <button id="tab-active" onclick="switchTab('active')"
+      class="flex-1 py-3 text-sm font-bold border-b-2 border-gray-900 text-gray-900">
+      Active
+    </button>
+    <button id="tab-completed" onclick="switchTab('completed')"
+      class="flex-1 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-400">
+      Completed
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div id="orders-container" class="px-6 mt-4 flex flex-col gap-4"></div>
+
+  <!-- Navbar -->
+  <div id="navbar"></div>
+
+  <script type="module" src="../script/orders.js"></script>
+</body>
+
+</html>
