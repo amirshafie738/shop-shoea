@@ -9,6 +9,7 @@ let product = null;
 let quantity = 1;
 let selectedSize = null;
 let selectedColor = null;
+let selectedColorName = null;
 
 // --- localStorage key (فقط برای cart نگه می‌داریم) ---
 const CART_KEY = "cart";
@@ -94,7 +95,7 @@ function addToCart() {
         price: product.price,
         quantity: quantity,
         size: selectedSize,
-        color: selectedColor,
+        color: selectedColorName,
     };
 
     const existingIndex = cart.findIndex(
@@ -105,8 +106,17 @@ function addToCart() {
     );
 
     if (existingIndex !== -1) {
-        cart[existingIndex].quantity += newItem.quantity;
+        const newQty = cart[existingIndex].quantity + newItem.quantity;
+        if (newQty > 10) {
+            alert("Maximum 10 items allowed");
+            return;
+        }
+        cart[existingIndex].quantity = newQty;
     } else {
+        if (newItem.quantity > 10) {
+            alert("Maximum 10 items allowed");
+            return;
+        }
         cart.push(newItem);
     }
 
@@ -222,15 +232,17 @@ async function renderProduct(p) {
     const colorContainer = document.getElementById("color-options");
     colorContainer.innerHTML = "";
     if (p.colors && p.colors.length > 0) {
-        selectedColor = p.colors[0];
+        selectedColorName = p.colors[0].name;
+        selectedColor = p.colors[0].value;
         p.colors.forEach((color, index) => {
             const isActive = index === 0;
             const btn = document.createElement("button");
-            btn.style.backgroundColor = color;
+            btn.style.backgroundColor = color.value;
             btn.className = colorClass(isActive);
             btn.innerHTML = isActive ? "✓" : "";
             btn.addEventListener("click", () => {
-                selectedColor = color;
+                selectedColor = color.value;
+                selectedColorName = color.name;
                 document.querySelectorAll("#color-options button").forEach((b, i) => {
                     b.className = colorClass(i === index);
                     b.innerHTML = i === index ? "✓" : "";

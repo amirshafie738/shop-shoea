@@ -80,7 +80,7 @@ function displayProducts() {
         <div class="flex flex-col">
 
           <!-- Image Container -->
-          <div class="bg-gray-100 rounded-3xl flex items-center justify-center p-5 overflow-hidden mb-3">
+          <div class="bg-[#f1f1f1] rounded-3xl flex items-center justify-center p-5 overflow-hidden mb-3">
             <img src="${p.image}" alt="Product" class="w-36 h-36">
           </div>
 
