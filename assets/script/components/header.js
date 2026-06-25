@@ -1,10 +1,22 @@
 // src/components/header/header.js
 export const renderHeader = ({
-    name = "Saeed Abdilar",
-    greeting = "Good Morning 👋",
-    avatar = "../images/image.png",
-  } = {}) => {
-    return `
+  name = "amir hossein",
+  avatar = "../images/image.png",
+} = {}) => {
+  // تشخیص greeting بر اساس ساعت
+  const hour = new Date().getHours();
+  let greeting;
+  if (hour >= 5 && hour < 12) {
+    greeting = "Good Morning 👋";
+  } else if (hour >= 12 && hour < 17) {
+    greeting = "Good Afternoon 👋";
+  } else if (hour >= 17 && hour < 21) {
+    greeting = "Good Evening 👋";
+  } else {
+    greeting = "Good Night 🌙";
+  }
+
+  return `
     <header class="bg-white h-20 flex w-full items-center justify-between px-6">
   
       <!-- بخش پروفایل (سمت چپ) -->
@@ -49,4 +61,4 @@ export const renderHeader = ({
   
     </header>
     `;
-  };
+};
