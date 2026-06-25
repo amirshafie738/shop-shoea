@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white max-w-md mx-auto min-h-screen pb-32">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between px-6 py-4 mt-2">
+    <div class="flex gap-4">
+      <button onclick="history.back()" class="p-1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <h1 class="text-xl  font-semibold">Checkout</h1>
+    </div>
+    <div class="w-6">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="8" y1="12" x2="8.01" y2="12"></line>
+        <line x1="12" y1="12" x2="12.01" y2="12"></line>
+        <line x1="16" y1="12" x2="16.01" y2="12"></line>
+      </svg>
+
+    </div>
+  </div>
+
+  <!-- Shipping Address -->
+  <div class="px-6 mt-2">
+    <p class="text-base  font-medium mb-3">Shipping Address</p>
+    <div class="flex items-center justify-between bg-gray-50 rounded-2xl p-4">
+      <div class="flex  items-center gap-3">
+        <div
+          class="w-10 h-10 bg-gray-900 rounded-full  flex items-center justify-center ring-[8px] ring-gray-300 ring-opacity-50">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </div>
+        <div>
+          <p id="address-label" class="font-bold text-gray-900 text-sm"></p>
+          <p id="address-text" class="text-gray-500 text-xs mt-0.5"></p>
+        </div>
+      </div>
+      <button onclick="goToAddresses()" class="p-1">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Order List -->
+  <div class="px-6 mt-6">
+    <p class="text-base  font-semibold mb-3">Order List</p>
+    <div id="order-list" class="flex flex-col gap-3"></div>
+  </div>
+
+  <!-- Choose Shipping -->
+  <div class="px-6 mt-6">
+    <p class="text-base  font-bold mb-3">Choose Shipping</p>
+    <div id="shipping-section">
+      <button onclick="goToShipping()" class="w-full flex items-center justify-between bg-gray-50 rounded-2xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <span class="font-semibold text-gray-900">Choose Shipping Type</span>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Promo Code -->
+  <div class="px-6 mt-6">
+    <p class="text-base  font-bold mb-3">Promo Code</p>
+    <div id="promo-section" class="flex items-center gap-2">
+      <input id="promo-input" type="text" placeholder="Enter Promo Code"
+        class="flex-1 bg-gray-50 rounded-xl px-4 py-3 text-sm outline-none border border-transparent focus:border-gray-300">
+      <button onclick="applyPromo()"
+        class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </div>
+    <div id="promo-applied" class="hidden flex items-center gap-2 mt-2">
+      <span class="bg-gray-900 text-white text-sm px-4 py-2 rounded-full flex items-center gap-2">
+        <span id="promo-label"></span>
+        <button onclick="removePromo()" class="ml-1 text-gray-300 hover:text-white">✕</button>
+      </span>
+      <button onclick="goToPromo()"
+        class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="px-6 mt-6 flex flex-col gap-2">
+    <div class="flex justify-between text-sm text-gray-500">
+      <span>Amount</span>
+      <span id="summary-amount">-</span>
+    </div>
+    <div class="flex justify-between text-sm text-gray-500">
+      <span>Shipping</span>
+      <span id="summary-shipping">-</span>
+    </div>
+    <div id="promo-row" class="hidden flex justify-between text-sm text-gray-500">
+      <span>Promo</span>
+      <span id="summary-promo" class="text-red-500">-</span>
+    </div>
+    <div class="flex justify-between text-sm font-bold text-gray-900 mt-1">
+      <span>Total</span>
+      <span id="summary-total">-</span>
+    </div>
+  </div>
+
+  <!-- Continue to Payment -->
+  <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto px-6 pb-8 pt-4 bg-white">
+    <button onclick="goToPayment()"
+      class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+      Continue to Payment
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M5 12h14M12 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Shipping Address Modal -->
+  <div id="address-modal" class="hidden  fixed inset-0 bg-white z-50 max-w-md mx-auto flex flex-col">
+    <div class="flex items-center px-6 py-4 mt-2">
+      <button onclick="closeAddressModal()" class="p-1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <h2 class="text-xl font-bold ml-4">Shipping Address</h2>
+    </div>
+    <div class=" flex flex-col flex-1 px-5">
+      <div id="address-list" class="  mt-4 flex flex-col gap-3 "></div>
+
+      <button id="new-address" class="w-full mt-8 bg-[#e7e7e7] py-4 rounded-full font-bold">
+        Add New Address
+      </button>
+    </div>
+    <div class="px-6 pb-4 mb-5  ">
+      <button onclick="applyAddress()" class="w-full  bg-gray-900 text-white py-4 rounded-2xl font-bold">Apply</button>
+    </div>
+  </div>
+
+  <!-- Shipping Type Modal -->
+  <div id="shipping-modal" class="hidden fixed inset-0 bg-white z-50 max-w-md mx-auto flex flex-col">
+    <div class="flex items-center px-6 py-4 mt-2">
+      <button onclick="closeShippingModal()" class="p-1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <h2 class="text-xl font-bold ml-4">Choose Shipping</h2>
+    </div>
+    <div class="flex-1 px-6 mt-4 flex flex-col gap-3">
+      <!-- Economy -->
+      <label class="shipping-option flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Economy</p>
+            <p class="text-xs text-gray-400">Estimated Arrival, Dec 20-23</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-bold">$10</span>
+          <input type="radio" name="shipping" value="10" data-label="Economy" class="w-5 h-5 accent-gray-900">
+        </div>
+      </label>
+      <!-- Regular -->
+      <label class="shipping-option flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Regular</p>
+            <p class="text-xs text-gray-400">Estimated Arrival, Dec 20-22</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-bold">$15</span>
+          <input type="radio" name="shipping" value="15" data-label="Regular" class="w-5 h-5 accent-gray-900">
+        </div>
+      </label>
+      <!-- Cargo -->
+      <label class="shipping-option flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Cargo</p>
+            <p class="text-xs text-gray-400">Estimated Arrival, Dec 19-20</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-bold">$20</span>
+          <input type="radio" name="shipping" value="20" data-label="Cargo" class="w-5 h-5 accent-gray-900">
+        </div>
+      </label>
+      <!-- Express -->
+      <label class="shipping-option flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Express</p>
+            <p class="text-xs text-gray-400">Estimated Arrival, Dec 18-19</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-bold">$30</span>
+          <input type="radio" name="shipping" value="30" data-label="Express" class="w-5 h-5 accent-gray-900">
+        </div>
+      </label>
+    </div>
+    <div class="px-6 pb-8 mt-4">
+      <button onclick="applyShipping()" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold">Apply</button>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="payment-modal" class="hidden fixed inset-0 bg-white z-50 max-w-md mx-auto flex flex-col">
+    <div class="flex items-center px-6 py-4 mt-2  justify-between">
+      <div class="flex">
+        <button onclick="closePaymentModal()" class="p-1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 5l-7 7 7 7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-bold ml-4">Payment Methods</h2>
+      </div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 5V19M5 12H19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <p class="px-6 text-gray-500 text-sm">Select the payment method you want to use</p>
+    <div class="flex-1 px-6 mt-6 flex flex-col gap-3">
+      <!-- My Wallet -->
+      <label class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+              <path d="M18 12a2 2 0 0 0 0 4h4v-4z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">My Wallet</p>
+            <p class="text-xs text-gray-400">$9,379</p>
+          </div>
+        </div>
+        <input type="radio" name="payment" value="wallet" class="w-5 h-5 accent-gray-900" checked>
+      </label>
+      <!-- PayPal -->
+      <label class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+            <span class="text-white font-bold text-sm">P</span>
+          </div>
+          <p class="font-bold text-gray-900">PayPal</p>
+        </div>
+        <input type="radio" name="payment" value="paypal" class="w-5 h-5 accent-gray-900">
+      </label>
+      <!-- Google Pay -->
+      <label class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center">
+            <span class="text-blue-500 font-bold text-sm">G</span>
+          </div>
+          <p class="font-bold text-gray-900">Google Pay</p>
+        </div>
+        <input type="radio" name="payment" value="google" class="w-5 h-5 accent-gray-900">
+      </label>
+      <!-- Apple Pay -->
+      <label class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+              <path
+                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83" />
+            </svg>
+          </div>
+          <p class="font-bold text-gray-900">Apple Pay</p>
+        </div>
+        <input type="radio" name="payment" value="apple" class="w-5 h-5 accent-gray-900">
+      </label>
+      <!-- Credit Card -->
+      <label class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Credit Card</p>
+            <p class="text-xs text-gray-400">•••• 4679</p>
+          </div>
+        </div>
+        <input type="radio" name="payment" value="card" class="w-5 h-5 accent-gray-900">
+      </label>
+    </div>
+    <div class="px-6 pb-8 mt-4">
+      <button onclick="confirmPayment()" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold">Confirm
+        Payment</button>
+    </div>
+  </div>
+
+  <!-- Order Success Modal -->
+  <div id="success-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end max-w-md mx-auto">
+    <div class="bg-white rounded-t-3xl w-full p-8 flex flex-col items-center">
+      <div class="w-20 h-20 bg-gray-900 rounded-full flex items-center justify-center mb-6">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+          <path d="M3 6h18" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Order Successful!</h2>
+      <p class="text-gray-500 text-sm text-center mb-8">You have successfully made order</p>
+      <button onclick="viewOrder()" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold mb-3">View
+        Order</button>
+      <button class="w-full border border-gray-200 py-4 rounded-2xl font-bold text-gray-900">View E-Receipt</button>
+    </div>
+  </div>
+
+  <script type="module" src="../script/checkout.js"></script>
+</body>
+
+</html>
