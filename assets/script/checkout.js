@@ -260,7 +260,7 @@ window.confirmPayment = async function () {
     shipping: selectedShipping,
     total,
     paymentMethod,
-    active: false,  // ← این رو اضافه کن
+    active: false,  
   };
 
   try {

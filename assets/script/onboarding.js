@@ -21,7 +21,7 @@ setTimeout(() => {
         onboardingContentPage2.classList.remove('hidden');
         onboardingContentPage2.classList.add( 'animate-fade-in');
     }, 700)
-}, 1000)
+}, 2000)
 //////////////////////// Switch between page two and three ////////////////////////
 onboardingContentPage2.addEventListener('click', () => {
     // اضافه کردن انیمیشن محوشدن

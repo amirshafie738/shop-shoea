@@ -17,15 +17,7 @@ const CART_KEY = "cart";
 // ============================================================
 // ستاره‌ها با SVG gradient
 // ============================================================
-function starPoints(cx, cy, outerR, innerR) {
-    const points = [];
-    for (let i = 0; i < 10; i++) {
-        const angle = (Math.PI / 5) * i - Math.PI / 2;
-        const r = i % 2 === 0 ? outerR : innerR;
-        points.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
-    }
-    return points.join(" ");
-}
+
 
 function renderStars(rating) {
     const percent = (rating / 5) * 100;
@@ -67,7 +59,7 @@ async function toggleFavorite(id) {
         return true;
     }
 }
-
+// برای تغییر ظاهر آیکون
 function updateWishlistIcon(active) {
     const svg = document.querySelector("#wishlist-btn svg");
     svg.setAttribute("fill", active ? "currentColor" : "none");
@@ -146,7 +138,7 @@ async function loadProduct() {
 function initSwiper(p) {
     const wrapper = document.getElementById("swiper-wrapper");
     wrapper.innerHTML = "";
-
+///بررسی می‌کند آیا p.images واقعاً آرایه است یا نه
     const images = Array.isArray(p.images) && p.images.length > 0
         ? p.images
         : [p.image];
@@ -154,7 +146,7 @@ function initSwiper(p) {
     images.forEach((src) => {
         wrapper.innerHTML += `
             <div class="swiper-slide">
-                <img src="${src}" alt="${p.title}">
+                <img src="${src}">
             </div>
         `;
     });
@@ -204,7 +196,7 @@ async function renderProduct(p) {
         let expanded = false;
         viewMoreBtn.addEventListener("click", () => {
             expanded = !expanded;
-            descEl.textContent = expanded ? fullDesc + " " : shortDesc;
+            descEl.textContent = expanded ? fullDesc : shortDesc;
             viewMoreBtn.textContent = expanded ? "view less.." : "view more..";
         });
     }
